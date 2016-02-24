@@ -1,5 +1,6 @@
 <!-- extend base layout -->
 {% extends "base.html" %}
+{% from "_form_helpers.html" import render_field %}
 
 {% block js %}
     <script type="text/javascript">
@@ -9,10 +10,12 @@
         if (u != -1) {
             // openid requires username
             user = prompt('Enter your ' + pr + ' username:');
+            password = prompt ('Enter your ' + pr + ' password:')
             openid = openid.substr(0, u) + user;
         }
         form = document.forms['login'];
         form.elements['openid'].value = openid;
+        form.elements['password'].value = password;
     }
     </script>
 
@@ -31,6 +34,12 @@
             |{% for prkey in providers.keys() %}
                 <a href="javascript:set_openid('{{ providers[prkey] }}', '{{ prkey }}');">{{ prkey }}</a> |
             {% endfor %}
+        </p>
+        <p>
+            {{ render_field(form.password) }}
+            {% for error in form.password.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}<br>
         </p>
         <p>{{ form.remember_me }} Remember Me</p>
         <p><input type="submit" value="Sign In"></p>
