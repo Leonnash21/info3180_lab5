@@ -2,38 +2,16 @@
 {% extends "base.html" %}
 {% from "_form_helpers.html" import render_field %}
 
-{% block js %}
-    <script type="text/javascript">
-    function set_openid(openid, pr)
-    {
-        u = openid.search('<username>');
-        if (u != -1) {
-            // openid requires username
-            user = prompt('Enter your ' + pr + ' username:');
-            password = prompt ('Enter your ' + pr + ' password:')
-            openid = openid.substr(0, u) + user;
-        }
-        form = document.forms['login'];
-        form.elements['openid'].value = openid;
-        form.elements['password'].value = password;
-    }
-    </script>
-
-{% endblock %}
-
 {% block main %}
     <h1>Sign In</h1>
     <form action="" method="post" name="login">
         {{ form.hidden_tag() }}
+        
         <p>
-            Please enter your OpenID, or select one of the providers below:<br>
-            {{ form.openid(size=80) }}
-            {% for error in form.openid.errors %}
+            {{ render_field(form.email) }}
+            {% for error in form.email.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}<br>
-            |{% for prkey in providers.keys() %}
-                <a href="javascript:set_openid('{{ providers[prkey] }}', '{{ prkey }}');">{{ prkey }}</a> |
-            {% endfor %}
         </p>
         <p>
             {{ render_field(form.password) }}
